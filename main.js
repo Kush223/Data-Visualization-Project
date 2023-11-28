@@ -269,10 +269,10 @@ function make_innovative(targetDate){
   })
 }
 function plot(parsedData,targetDate){
-  console.log(parsedData);
-  console.log(targetDate);
+  // console.log(parsedData);
+  // console.log(targetDate);
   const filteredData = parsedData.filter(item => item.day === targetDate);
-  console.log(filteredData);
+  // console.log(filteredData);
   const groupedData = d3.group(filteredData, d => `${d.CarID}-${d.CurrentEmploymentTitle}-${d.CurrentEmploymentType}-${d.FullName}`);
   const aggregatedData = Array.from(groupedData, ([key, values]) => {
   const [id, role, department, name] = key.split('-');
@@ -473,7 +473,7 @@ function plot(parsedData,targetDate){
 
   }
 
-  const tooltip = d3.select("innovative-container1")
+  const tooltip = d3.select(".innovative-container1")
   .append("div")
   .style("opacity", 0)
   .style("position","fixed")
