@@ -1,5 +1,5 @@
 let margin_hm, width_hm, height_hm, svg_hm, g_hm, svg_ts
-let margin_ng, width_ng, height_ng, svg_ng, g_ng, svg_hg, bar_svg
+let margin_ng, width_ng, height_ng, svg_ng, g_ng, svg_hg, bar_svg, svg_bubble
 let department_data, intermediate_emp_data, emp_data
 let name_ts,timestamp_ts,location_ts,Innerwidth,Innerheight,margin_ts,width_ts,height_ts
 document.addEventListener('DOMContentLoaded', function () {
@@ -11,6 +11,11 @@ document.addEventListener('DOMContentLoaded', function () {
     height_hm = 600 - margin_hm.top - margin_hm.bottom
     width_bp=860
     height_bp=760
+
+    svg_bubble = d3.select('#bnbc')
+          .attr('width', 3000)
+          .attr('height',3000);
+
     bar_svg = d3
     .select("#barpie")
     .attr("width", width_bp)
@@ -245,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function make_innovative(targetDate){
   Promise.all([
-    d3.csv("Scatter_Network_Bubble.csv")]).then(function (values) {
+    d3.csv("data/Scatter_Network_Bubble.csv")]).then(function (values) {
       data = values[0];
       console.log("This is data",data)
 
@@ -262,7 +267,10 @@ function make_innovative(targetDate){
   })
 }
 function plot(parsedData,targetDate){
+  console.log(parsedData);
+  console.log(targetDate);
   const filteredData = parsedData.filter(item => item.day === targetDate);
+  console.log(filteredData);
   const groupedData = d3.group(filteredData, d => `${d.CarID}-${d.CurrentEmploymentTitle}-${d.CurrentEmploymentType}-${d.FullName}`);
   const aggregatedData = Array.from(groupedData, ([key, values]) => {
   const [id, role, department, name] = key.split('-');
@@ -314,11 +322,6 @@ function plot(parsedData,targetDate){
           .force('center', d3.forceCenter(1000, 1000))
           .force('collide', d3.forceCollide().radius(20)) ;
 
-      // Set up SVG container for the combined graph
-      const svg = d3.select('body').append('svg')
-          .attr('width', 3600)
-          .attr('height',3600);
-
       // Count the number of job roles under each department
       const departmentCounts = d3.rollup(nodes, v => v.length, d => d.role);
   
@@ -331,7 +334,7 @@ function plot(parsedData,targetDate){
       .range( c);
       console.log("coloers",d3.schemeSet1)
       // Create bubbles for thebubble chart
-      const bubbles = svg.selectAll('.bubble')
+      const bubbles = svg_bubble.selectAll('.bubble')
           .data(Array.from(departmentCounts, ([role, count]) => ({ role, count })))
           .enter().append('circle')
           .attr('class', 'bubble')
@@ -403,7 +406,7 @@ function plot(parsedData,targetDate){
   .style("opacity", 1)
   }
   // Create connectors between individuals and their respective department's bubble
-  const connectors = svg.selectAll('.connector')
+  const connectors = svg_bubble.selectAll('.connector')
   .data(nodes)
   .enter().append('line')
   .attr('class', 'connector')
@@ -420,7 +423,7 @@ function plot(parsedData,targetDate){
   .attr('y2', d => d.y);
 
   // Create transaction bars above the employee names
-  const transactionBars = svg.selectAll('.transaction-bar-group')
+  const transactionBars = svg_bubble.selectAll('.transaction-bar-group')
   .data(nodes)
   .enter().append('g')
   .attr('class', 'transaction-bar-group')
@@ -468,7 +471,7 @@ function plot(parsedData,targetDate){
 
   }
 
-  const tooltip = d3.select("body")
+  const tooltip = d3.select("innovative-container1")
   .append("div")
   .style("opacity", 0)
   .style("position","fixed")
@@ -481,7 +484,7 @@ function plot(parsedData,targetDate){
 
 
   // Create axes for each employee name
-  const axes = svg.selectAll('.axis')
+  const axes = svg_bubble.selectAll('.axis')
   .data(nodes)
   .enter().append('g')
   .attr('class', 'axis')
@@ -506,19 +509,19 @@ function plot(parsedData,targetDate){
   .attr('transform', 'translate(0,-10)');
 
   // Create links for the circular network graph
-  const link = svg.selectAll('.link')
+  const link = svg_bubble.selectAll('.link')
   .data(links)
   .enter().append('line')
   .attr('class', 'link');
 
   // Create employee names for the circular network graph
-  const employeeNames = svg.selectAll('.employee-name')
+  const employeeNames = svg_bubble.selectAll('.employee-name')
   .data(nodes)
   .enter().append('text')
   .attr('class', 'employee-name')
   .text(d => d.name);
 
-  var legend = svg
+  var legend = svg_bubble
   .append("g")
   .attr("class", "legend")
   .attr("x",65)
@@ -558,11 +561,11 @@ function plot(parsedData,targetDate){
   //})
   //    .attr('y1', 600)
   //    .attr('x2', d => {
-  //        const departmentText = svg.selectAll('.employee-name').filter(e => e.department === d.target.department).node();
+  //        const departmentText = svg_bubble.selectAll('.employee-name').filter(e => e.department === d.target.department).node();
   //        return departmentText ? parseFloat(departmentText.getAttribute('x')) : 0;
   //    })
   //    .attr('y2', d => {
-  //        const departmentText = svg.selectAll('.employee-name').filter(e => e.department === d.target.department).node();
+  //        const departmentText = svg_bubble.selectAll('.employee-name').filter(e => e.department === d.target.department).node();
   //        return departmentText ? parseFloat(departmentText.getAttribute('y')) : 0;
   //    });
   link.attr('x1', d => {
@@ -1017,84 +1020,6 @@ function make_network (location, timestamp) {
     }
   })
 }
-// function make_pie () {
-//   d3.csv('data/piechart_data.csv').then(function (data) {
-//     // Nest data by CurrentEmploymentType and calculate the sum of prices
-//     console.log('This is a person', person)
-//     const nestedData = d3
-//       .nest()
-//       .key(d => d.CurrentEmploymentType)
-//       .rollup(group => d3.sum(group, d => +d.price)) // Convert to a number
-//       .entries(data)
-
-//     // Process the nested data
-//     const processedData = nestedData.map(d => ({
-//       type: d.key,
-//       totalAmount: d.value
-//     }))
-
-//     // Set up the pie chart dimensions
-//     const width = 700
-//     const height = 300
-//     const radius = Math.min(width, height) / 2
-
-//     // Set up colors for the pie chart
-//     const color = d3
-//       .scaleOrdinal()
-//       .domain(processedData.map(d => d.type))
-//       .range(['#FF6384', '#36A2EB', '#FFCE56', '#4CAF50', '#FF5733', '#8E44AD']) // Add more colors as needed
-
-//     // Create an SVG element
-//     const svg = d3
-//       .select('#employeePieChart')
-//       .append('svg')
-//       .attr('width', width)
-//       .attr('height', height)
-//       .append('g')
-//       .attr('transform', `translate(${width / 2},${height / 2})`)
-
-//     // Generate the pie chart
-//     const pie = d3.pie().value(d => d.totalAmount)
-//     const path = d3.arc().outerRadius(radius).innerRadius(0)
-
-//     const arcs = svg
-//       .selectAll('arc')
-//       .data(pie(processedData))
-//       .enter()
-//       .append('g')
-
-//     arcs
-//       .append('path')
-//       .attr('d', path)
-//       .attr('fill', d => color(d.data.type))
-
-//     // Add a legend with some separation
-//     const legend = svg
-//       .selectAll('.legend')
-//       .data(processedData.map(d => d.type))
-//       .enter()
-//       .append('g')
-//       .attr('class', 'legend')
-//       .attr(
-//         'transform',
-//         (d, i) => `translate(-${width / 2 + 10},${i * 25 - height / 2 + 10})`
-//       )
-
-//     legend
-//       .append('rect')
-//       .attr('width', 18)
-//       .attr('height', 18)
-//       .style('fill', color)
-
-//     legend
-//       .append('text')
-//       .attr('x', 24)
-//       .attr('y', 9)
-//       .attr('dy', '.35em')
-//       .style('text-anchor', 'start')
-//       .text(d => d)
-//   })
-// }
 
 function make_histogram (employee_name) {
   d3.csv('data/Histogram_data.csv').then(function (data) {
