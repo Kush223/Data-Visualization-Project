@@ -9,6 +9,11 @@ let name_ts,
   margin_ts,
   width_ts,
   height_ts
+let date1_container = document.getElementById('barpie-date-container')
+let date2_container = document.getElementById('network-date-container')
+let location1_container = document.getElementById('network-location-container')
+let location2_container = document.getElementById('time-location-container')
+let employee_container = document.getElementById('time-employee-container')
 document.addEventListener('DOMContentLoaded', function () {
   Promise.all([d3.csv('data/heatmap_data.csv')]).then(function (values) {
     heatmap_data = values[0]
@@ -16,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     margin_hm = { top: 50, right: 50, bottom: 50, left: 80 }
     width_hm = 800 - margin_hm.left - margin_hm.right
     height_hm = 600 - margin_hm.top - margin_hm.bottom
-    width_bp = 860
+    width_bp = 760
     height_bp = 760
 
     svg_bubble = d3.select('#bnbc').attr('width', 1500).attr('height', 870)
@@ -272,12 +277,16 @@ function make_innovative (targetDate) {
     plot(parsedData, targetDate)
   })
 }
-function plot(parsedData,targetDate){
+function plot (parsedData, targetDate) {
   // console.log(parsedData);
   // console.log(targetDate);
-  const filteredData = parsedData.filter(item => item.day === targetDate);
+  const filteredData = parsedData.filter(item => item.day === targetDate)
   // console.log(filteredData);
-  const groupedData = d3.group(filteredData, d => `${d.CarID}-${d.CurrentEmploymentTitle}-${d.CurrentEmploymentType}-${d.FullName}`);
+  const groupedData = d3.group(
+    filteredData,
+    d =>
+      `${d.CarID}-${d.CurrentEmploymentTitle}-${d.CurrentEmploymentType}-${d.FullName}`
+  )
   const aggregatedData = Array.from(groupedData, ([key, values]) => {
     const [id, role, department, name] = key.split('-')
     const transactions = values.map(d => ({
@@ -513,17 +522,17 @@ function plot(parsedData,targetDate){
       .style('opacity', 1)
   }
 
-  const tooltip = d3.select(".innovative-container1")
-  .append("div")
-  .style("opacity", 0)
-  .style("position","fixed")
-  .attr("class", "tooltip")
-  .style("background-color", "white")
-  .style("border", "solid")
-  .style("border-width", "2px")
-  .style("border-radius", "5px")
-  .style("padding", "10px")
-
+  const tooltip = d3
+    .select('.innovative-container1')
+    .append('div')
+    .style('opacity', 0)
+    .style('position', 'fixed')
+    .attr('class', 'tooltip')
+    .style('background-color', 'white')
+    .style('border', 'solid')
+    .style('border-width', '2px')
+    .style('border-radius', '5px')
+    .style('padding', '10px')
 
   // Create axes for each employee name
   const axes = svg_bubble
@@ -728,6 +737,8 @@ function data_wrangling (date) {
   emp_data = intermediate_emp_data.filter(e => e.date === date)
   department_data = {}
 
+  date1_container.innerHTML = 'Day : ' + date
+
   emp_data.forEach(emp => {
     const department = emp.department
 
@@ -747,7 +758,7 @@ function data_wrangling (date) {
 function draw_barchart () {
   d3.select('#barpie>g').selectAll('*').remove()
 
-  var innerRadius = 220
+  var innerRadius = 150
   var outerRadius = Math.min(width_bp, height_bp) / 2
   var x = d3
     .scaleBand()
@@ -845,7 +856,7 @@ function draw_barchart () {
         d3
           .arc()
           .innerRadius(0)
-          .outerRadius(innerRadius + 100)
+          .outerRadius(innerRadius + 60)
           .padAngle(0.01)
           .padRadius(innerRadius)
           .centroid(d) +
@@ -891,8 +902,8 @@ function draw_barchart () {
   //tooltip
   var Tooltip = d3
     .selectAll('.innovative-container')
-    .style('left', '0px')
-    .style('top', '0px')
+    // .style('left', '0px')
+    // .style('top', '0px')
     .append('div')
     .attr('class', 'tooltip')
     .style('opacity', 0)
@@ -920,7 +931,7 @@ function draw_barchart () {
         .style('top', event.screenY - 75 + 'px')
     })
     .on('mouseout', function (d, i) {
-      Tooltip.style('opacity', 0).style('left', '0px').style('top', '0px')
+      Tooltip.style('opacity', 0).style("left","0px").style("top","0px")
     })
 
   bar_svg
@@ -936,7 +947,7 @@ function draw_barchart () {
         .style('top', event.screenY - 75 + 'px')
     })
     .on('mouseout', function (d, i) {
-      Tooltip.style('opacity', 0).style('left', '0px').style('top', '0px')
+      Tooltip.style('opacity', 0)
     })
 }
 
@@ -948,6 +959,8 @@ function freq_ts () {
 }
 
 function make_network (location, timestamp) {
+  date2_container.innerHTML = 'Day : ' + timestamp
+  location1_container.innerHTML = 'Location : ' + location
   Promise.all([
     d3.csv('data/network_graph.csv'),
     d3.csv('data/id_fullname_cc_loyaltynum.csv')
@@ -1056,6 +1069,8 @@ function make_network (location, timestamp) {
     node.style('cursor', 'pointer').on('click', function (event, d) {
       d3.select('#histogram').selectAll('*').remove()
       d3.select('#time-series-chart').selectAll('*').remove()
+      employee_container.innerHTML = 'Employee : '
+      location2_container.innerHTML = 'Location : '
       make_histogram(d.Name)
       name_ts = d.Name
       timestamp_ts = timestamp
@@ -1283,6 +1298,8 @@ function make_histogram (employee_name) {
 }
 
 function TimeseriesAmount (employee_name, location, targetDate) {
+  employee_container.innerHTML = 'Employee : ' + employee_name
+  location2_container.innerHTML = 'Location : ' + location
   d3.select('#time-series-chart').selectAll('*').remove()
   console.log(targetDate)
   d3.csv('data/timeseries_data.csv').then(function (data) {
@@ -1417,6 +1434,8 @@ function TimeseriesAmount (employee_name, location, targetDate) {
 }
 
 function TimeseriesFrequency (employee_name, location, day) {
+  employee_container.innerHTML = 'Employee : ' + employee_name
+  location2_container.innerHTML = 'Location : ' + location
   d3.select('#time-series-chart').selectAll('*').remove()
   d3.csv('data/timeseries_data.csv').then(function (data) {
     day = new Date(day)
