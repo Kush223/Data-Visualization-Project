@@ -32,7 +32,10 @@ document.addEventListener('DOMContentLoaded', function () {
       .attr('height', height_hm + 100)
       .append('g')
       .attr('transform', `translate(${width_bp / 2}, ${height_bp / 2 + 100})`)
+      .style('fill', 'white')
     svg_ts = d3.select('#time-series-chart')
+    .style('fill', 'white')
+
     width_ts = +svg_ts.style('width').replace('px', '')
     height_ts = +svg_ts.style('height').replace('px', '')
     // console.log(employee_name + ' ' + location + ' ' + targetDate)
@@ -45,13 +48,14 @@ document.addEventListener('DOMContentLoaded', function () {
       .attr('width', Innerwidth)
       .attr('height', Innerheight)
       .append('g')
-      .attr('transform', `translate(${margin_ts.left},${margin_ts.top})`)
+      .attr('transform', `translate(${margin_ts.left},${margin_ts.top})`)   .style('fill', 'white')
 
     svg_hg = d3.select('#histogram')
     svg_hm = d3
       .select('#heatmap')
       .attr('width', width_hm + margin_hm.left + margin_hm.right)
       .attr('height', height_hm + margin_hm.top + margin_hm.bottom)
+      .style('fill', 'white')
     g_hm = svg_hm
       .append('g')
       .attr('transform', `translate(${margin_hm.left},${margin_hm.top})`)
@@ -62,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
       .select('#networkGraph')
       .append('svg')
       .attr('width', width_ng + margin_ng.left + margin_ng.right)
-      .attr('height', height_ng + margin_ng.top + margin_ng.bottom)
+      .attr('height', height_ng + margin_ng.top + margin_ng.bottom)    .style('fill', 'white')
     g_ng = svg_ng
       .append('g')
       .attr(
@@ -579,6 +583,7 @@ function plot (parsedData, targetDate) {
     .append('text')
     .attr('class', 'employee-name')
     .text(d => d.name)
+    .style("fill","white")
 
   var legend = svg_bubble
     .append('g')
@@ -608,9 +613,10 @@ function plot (parsedData, targetDate) {
         .attr('y', i * 20 + 483)
         .attr('height', 20)
         .attr('width', 90)
-        .style('fill', 'black')
+        .style('fill', 'white')
         .text(d)
         .style('font-size', 10)
+
     })
 
   // Update simulation on each tick for the circular network graph
@@ -1062,7 +1068,7 @@ function make_network (location, timestamp) {
       })
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
-      .style('fill', 'black')
+      .style('fill', 'white')
       .style('font-size', '7px')
 
     node = node.merge(extra_nodes)
@@ -1188,6 +1194,7 @@ function make_histogram (employee_name) {
       )
       .style('text-anchor', 'middle')
       .text('Loyalty/Credit Card Expenditure')
+      .style('fill','white')
 
     svg_hg
       .selectAll('.credit-card-bar')
@@ -1258,7 +1265,8 @@ function make_histogram (employee_name) {
           .attr('dy', '.35em')
           .style('text-anchor', 'start')
           .text(d)
-      })
+      }).style("fill","white")
+      
     // Add legend for the specified employee_name
     var customlegendColors = ['red', 'orange']
     var customLegend = svg_hg
@@ -1268,6 +1276,8 @@ function make_histogram (employee_name) {
         `translate(${Innerwidth + margin.left + 10},${
           margin.top + legendColors.length * 20 + 10
         })`
+        
+        
       )
 
     customLegend
@@ -1293,6 +1303,7 @@ function make_histogram (employee_name) {
           .attr('dy', '.35em')
           .style('text-anchor', 'start')
           .text(d)
+          .style("fill","white")
       })
   })
 }
@@ -1402,6 +1413,7 @@ function TimeseriesAmount (employee_name, location, targetDate) {
       .attr('y', margin_ts.left - 50) // Positioned to the left of the y-axis
       .style('text-anchor', 'middle')
       .text('Total Spending')
+      .style('fill', 'white')
 
     // Draw the line
     svg_ts
