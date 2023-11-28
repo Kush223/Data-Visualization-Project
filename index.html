@@ -12,12 +12,11 @@
 </head>
 
 <body>
+  <div class="text-center">
+    <h1 class="m-2">Data Visualization</h1>
+  </div>
 
-  <div class="container">
-    <div class="text-center">
-      <h1 class="m-2">Data Visualization</h1>
-    </div>
-
+  <div class="custom-container">
     <div class="heat-container m-4">
       <div class="row">
         <div class="col">
@@ -28,15 +27,19 @@
     </div>
 
     <div class="row">
-      <div class="col-8">
+      <div class="col-6">
         <div class="innovative-container m-4 text-start">
-          <h2 class="mb-4">Bar Pie Chart</h2>
+          <h2 class="mb-4 p-0 text-start">Bar Pie Chart</h2>
           <h3 id="barpie-date-container"></h3>
-          <svg id="barpie"></svg>
+          <div id="dates-dropdown">
+            <label for="attribute-select" class="fw-medium"></label>
+            <select id="attribute-select"></select>
+          </div>
+          <svg id="barpie" class="m-0 p-0"></svg>
         </div>
       </div>
 
-      <div class="col-4">
+      <div class="col-6">
         <div class="network-container m-4 text-end">
           <h2>Network Graph</h2>
           <h3 id="network-date-container"></h3>
@@ -55,22 +58,19 @@
       </div>
     </div>
 
-    <div class="histogram-container m-4">
-      <div class="row">
-        <div class="col">
+    <div class="row">
+      <div class="col-5">
+        <div class="histogram-container m-4">
           <h2>Histogram</h2>
           <svg id="histogram" width="1000px" height="650px"></svg>
         </div>
       </div>
-    </div>
-
-    <div class="time-container m-4">
-      <div class="row">
-        <div class="col">
+      <div class="col-7">
+        <div class="time-container m-4 text-end">
           <h2>Time Series</h2>
           <h3 id="time-location-container"></h3>
           <h3 id="time-employee-container"></h3>
-          <div class="dropdown m-5">
+          <div class="dropdown my-5">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
               aria-expanded="false">
               Display By
