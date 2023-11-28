@@ -1,7 +1,14 @@
 let margin_hm, width_hm, height_hm, svg_hm, g_hm, svg_ts
 let margin_ng, width_ng, height_ng, svg_ng, g_ng, svg_hg, bar_svg, svg_bubble
 let department_data, intermediate_emp_data, emp_data
-let name_ts,timestamp_ts,location_ts,Innerwidth,Innerheight,margin_ts,width_ts,height_ts
+let name_ts,
+  timestamp_ts,
+  location_ts,
+  Innerwidth,
+  Innerheight,
+  margin_ts,
+  width_ts,
+  height_ts
 document.addEventListener('DOMContentLoaded', function () {
   Promise.all([d3.csv('data/heatmap_data.csv')]).then(function (values) {
     heatmap_data = values[0]
@@ -9,22 +16,17 @@ document.addEventListener('DOMContentLoaded', function () {
     margin_hm = { top: 50, right: 50, bottom: 50, left: 80 }
     width_hm = 800 - margin_hm.left - margin_hm.right
     height_hm = 600 - margin_hm.top - margin_hm.bottom
-    width_bp=860
-    height_bp=760
+    width_bp = 860
+    height_bp = 760
 
-    svg_bubble = d3.select('#bnbc')
-          .attr('width', 3000)
-          .attr('height',3000);
+    svg_bubble = d3.select('#bnbc').attr('width', 3000).attr('height', 3000)
 
     bar_svg = d3
-    .select("#barpie")
-    .attr("width", width_bp)
-    .attr("height", height_hm + 100)
-    .append("g")
-    .attr(
-      "transform",
-      `translate(${width_bp / 2 }, ${height_bp / 2 + 100})`
-    );
+      .select('#barpie')
+      .attr('width', width_bp)
+      .attr('height', height_hm + 100)
+      .append('g')
+      .attr('transform', `translate(${width_bp / 2}, ${height_bp / 2 + 100})`)
     svg_ts = d3.select('#time-series-chart')
     width_ts = +svg_ts.style('width').replace('px', '')
     height_ts = +svg_ts.style('height').replace('px', '')
@@ -40,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
       .append('g')
       .attr('transform', `translate(${margin_ts.left},${margin_ts.top})`)
 
-    
     svg_hg = d3.select('#histogram')
     svg_hm = d3
       .select('#heatmap')
@@ -140,10 +141,10 @@ document.addEventListener('DOMContentLoaded', function () {
       // })
       .on('click', function (event, d) {
         console.log('Clicked cell:', d)
-        // d3.select('#networkGraph').remove()
+        // d3.select('#barpie').selectAll('*').remove()
         make_network(d.location, d.timestamp)
         d3.select('#histogram').selectAll('*').remove()
-        d3.select("#time-series-chart").selectAll("*").remove();
+        d3.select('#time-series-chart').selectAll('*').remove()
         make_piebar(d.timestamp)
         make_innovative(d.timestamp)
       })
@@ -218,54 +219,57 @@ document.addEventListener('DOMContentLoaded', function () {
     yAxisGroup.selectAll('text').style('font-size', '6px')
 
     var Tooltip_heatmap = d3
-    .selectAll(".heat-container")
-    .style("left", "0px")
-    .style("top", "0px")
-    .append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0)
-    .attr("class", "tooltip")
-    .style("background-color", "white")
-    .style("z-index", "100")
-    .style("border", "solid")
-    .style("position", "fixed")
-    .style("border-width", "2px")
-    .style("border-radius", "5px")
-    .style("padding", "5px");
+      .selectAll('.heat-container')
+      .style('left', '0px')
+      .style('top', '0px')
+      .append('div')
+      .attr('class', 'tooltip')
+      .style('opacity', 0)
+      .attr('class', 'tooltip')
+      .style('background-color', 'white')
+      .style('z-index', '100')
+      .style('border', 'solid')
+      .style('position', 'fixed')
+      .style('border-width', '2px')
+      .style('border-radius', '5px')
+      .style('padding', '5px')
 
-    svg_hm.selectAll(".cell")
-    .on("mouseover", function (d, i) {
-
-      Tooltip_heatmap.html("Transactions: "+i.num_transactions);
-      Tooltip_heatmap.style("opacity", 1);
-    })
-    .on("mousemove", function (d, i) {
-      Tooltip_heatmap.html("Transactions: "+i.num_transactions)
-        .style("left", event.screenX + "px")
-        .style("top", event.screenY - 75 + "px");
-    })
-    .on("mouseout", function (d, i) {
-      Tooltip_heatmap.style("opacity", 0).style("left", "0px").style("top", "0px");
-    });
+    svg_hm
+      .selectAll('.cell')
+      .on('mouseover', function (d, i) {
+        Tooltip_heatmap.html('Transactions: ' + i.num_transactions)
+        Tooltip_heatmap.style('opacity', 1)
+      })
+      .on('mousemove', function (d, i) {
+        Tooltip_heatmap.html('Transactions: ' + i.num_transactions)
+          .style('left', event.screenX + 'px')
+          .style('top', event.screenY - 75 + 'px')
+      })
+      .on('mouseout', function (d, i) {
+        Tooltip_heatmap.style('opacity', 0)
+          .style('left', '0px')
+          .style('top', '0px')
+      })
   })
 })
 
-function make_innovative(targetDate){
-  Promise.all([
-    d3.csv("data/Scatter_Network_Bubble.csv")]).then(function (values) {
-      data = values[0];
-      console.log("This is data",data)
+function make_innovative (targetDate) {
+  Promise.all([d3.csv('data/Scatter_Network_Bubble.csv')]).then(function (
+    values
+  ) {
+    data = values[0]
+    console.log('This is data', data)
 
-      const parsedData = data.map(item => ({
-        CarID: item.CarID,
-        CurrentEmploymentTitle: item.CurrentEmploymentTitle,
-        CurrentEmploymentType: item.CurrentEmploymentType,
-        FullName: item.FullName,
-        location: item.location,
-        price: parseFloat(item.price),
-        day: item.day, // Assuming price is a numerical value
-      }))
-      plot(parsedData,targetDate)
+    const parsedData = data.map(item => ({
+      CarID: item.CarID,
+      CurrentEmploymentTitle: item.CurrentEmploymentTitle,
+      CurrentEmploymentType: item.CurrentEmploymentType,
+      FullName: item.FullName,
+      location: item.location,
+      price: parseFloat(item.price),
+      day: item.day // Assuming price is a numerical value
+    }))
+    plot(parsedData, targetDate)
   })
 }
 function plot(parsedData,targetDate){
@@ -275,202 +279,238 @@ function plot(parsedData,targetDate){
   // console.log(filteredData);
   const groupedData = d3.group(filteredData, d => `${d.CarID}-${d.CurrentEmploymentTitle}-${d.CurrentEmploymentType}-${d.FullName}`);
   const aggregatedData = Array.from(groupedData, ([key, values]) => {
-  const [id, role, department, name] = key.split('-');
-  const transactions = values.map(d => ({
+    const [id, role, department, name] = key.split('-')
+    const transactions = values.map(d => ({
       location: d.location,
-      price: d.price,
-    }));
+      price: d.price
+    }))
     return {
-        id: id,
-        role: role,
-        department: department,
-        name: name,
-        transactions: transactions,
-    };
-  });
+      id: id,
+      role: role,
+      department: department,
+      name: name,
+      transactions: transactions
+    }
+  })
 
   // Step 4: Create a New Data Structure
   newDataStructure = aggregatedData.map(item => ({
-      id: item.id,
-      role: item.role,
-      department: item.department,
-      name: item.name,
-      transactions: item.transactions,
-  }));
+    id: item.id,
+    role: item.role,
+    department: item.department,
+    name: item.name,
+    transactions: item.transactions
+  }))
 
-  console.log("NewDatastructure",newDataStructure);
+  console.log('NewDatastructure', newDataStructure)
 
-  const nodes = newDataStructure;
+  const nodes = newDataStructure
   const orderedData = newDataStructure.sort((a, b) => {
-  if (a.role < b.role) return -1;
-  if (a.role > b.role) return 1;
-  return 0;
-  });
+    if (a.role < b.role) return -1
+    if (a.role > b.role) return 1
+    return 0
+  })
   console.log(orderedData[0].id)
 
   // Step 2: Create links between adjacent id values
-  const links = [];
+  const links = []
   for (let i = 0; i < orderedData.length; i++) {
-  const sourceId = orderedData[i]
-  const targetId = orderedData[(i + 1) % (orderedData.length)];
-  console.log("Source and target id",sourceId.id,targetId.id)
-  links.push({ source: sourceId.id, target: targetId.id });
+    const sourceId = orderedData[i]
+    const targetId = orderedData[(i + 1) % orderedData.length]
+    console.log('Source and target id', sourceId.id, targetId.id)
+    links.push({ source: sourceId.id, target: targetId.id })
   }
 
-      // Create force simulation for circular network graph
-      const simulation = d3.forceSimulation(nodes)
-          .force('link', d3.forceLink(links).id(d => d.id).distance(2))
-          .force('charge', d3.forceManyBody().strength(-123))
-          .force('center', d3.forceCenter(1000, 1000))
-          .force('collide', d3.forceCollide().radius(20)) ;
+  // Create force simulation for circular network graph
+  const simulation = d3
+    .forceSimulation(nodes)
+    .force(
+      'link',
+      d3
+        .forceLink(links)
+        .id(d => d.id)
+        .distance(2)
+    )
+    .force('charge', d3.forceManyBody().strength(-123))
+    .force('center', d3.forceCenter(1000, 1000))
+    .force('collide', d3.forceCollide().radius(20))
 
-      // Count the number of job roles under each department
-      const departmentCounts = d3.rollup(nodes, v => v.length, d => d.role);
-  
-      const colorArray = Array.from(departmentCounts.keys());
-      //console.log("key aray",keysArray )
-      let c= d3.schemeSet1;
-      Array.prototype.push.apply(c,d3.schemePastel2);
-      var myColor = d3.scaleOrdinal()
-      .domain(colorArray)
-      .range( c);
-      console.log("coloers",d3.schemeSet1)
-      // Create bubbles for thebubble chart
-      const bubbles = svg_bubble.selectAll('.bubble')
-          .data(Array.from(departmentCounts, ([role, count]) => ({ role, count })))
-          .enter().append('circle')
-          .attr('class', 'bubble')
-          .style("fill", function (d) { return myColor(d.role); } )
-          .attr('r', d => d.count*15 )
-          .attr('cx', function(d, i) {
-              let st = d.count;
-              let ans;
-          console.log('count',st,i)
-          if(i<6){
-              ans=i*110 +1480
-          }
-          else if(i<12){
-              ans=parseInt(i%6)*110 +1480
-          }
-          else{
-              ans=parseInt(i%12)*110 +1480
-          }
-  return ans;
-          } )
-          .attr('cy', function (d,i){
-              let st = d.count;
-              let ans;
-          console.log('count',st,i)
-          if(i<6){
-              ans=700
-          }
-          else if(i<12){
-              ans = 1000;
-          }
-          else{
-              ans = 1300;
-          }
-  return ans;
-          })
-          .on("mouseover", debounce2(handleMouseOver2,10))
-  .on("mousemove",function(d){
+  // Count the number of job roles under each department
+  const departmentCounts = d3.rollup(
+    nodes,
+    v => v.length,
+    d => d.role
+  )
+
+  const colorArray = Array.from(departmentCounts.keys())
+  //console.log("key aray",keysArray )
+  let c = d3.schemeSet1
+  Array.prototype.push.apply(c, d3.schemePastel2)
+  var myColor = d3.scaleOrdinal().domain(colorArray).range(c)
+  console.log('coloers', d3.schemeSet1)
+  // Create bubbles for thebubble chart
+  const bubbles = svg_bubble
+    .selectAll('.bubble')
+    .data(Array.from(departmentCounts, ([role, count]) => ({ role, count })))
+    .enter()
+    .append('circle')
+    .attr('class', 'bubble')
+    .style('fill', function (d) {
+      return myColor(d.role)
+    })
+    .attr('r', d => d.count * 15)
+    .attr('cx', function (d, i) {
+      let st = d.count
+      let ans
+      console.log('count', st, i)
+      if (i < 6) {
+        ans = i * 110 + 1480
+      } else if (i < 12) {
+        ans = parseInt(i % 6) * 110 + 1480
+      } else {
+        ans = parseInt(i % 12) * 110 + 1480
+      }
+      return ans
+    })
+    .attr('cy', function (d, i) {
+      let st = d.count
+      let ans
+      console.log('count', st, i)
+      if (i < 6) {
+        ans = 700
+      } else if (i < 12) {
+        ans = 1000
+      } else {
+        ans = 1300
+      }
+      return ans
+    })
+    .on('mouseover', debounce2(handleMouseOver2, 10))
+    .on('mousemove', function (d) {
       tooltip
-      .style("left", (d.offsetX-810) + "px") 
-      .style("top", (d.offsetY -500) + "px")
-      .style("opacity", 1)
+        .style('left', d.offsetX - 810 + 'px')
+        .style('top', d.offsetY - 500 + 'px')
+        .style('opacity', 1)
+    })
+    .on('mouseleave', function (d) {
+      d3.select('#character-name').html('NONE')
+      tooltip.style('opacity', 0)
+    })
 
-  })
-  .on("mouseleave",function(d) {
-      d3.select("#character-name").html("NONE")
-      tooltip
-      .style("opacity", 0)})
-
-
-      // Debounce function
-  function debounce2(func, wait) {
-      let timeout;
-      return function () {
+  // Debounce function
+  function debounce2 (func, wait) {
+    let timeout
+    return function () {
       const context = this,
-          args = arguments;
+        args = arguments
       const later = function () {
-          timeout = null;
-          func.apply(context, args);
-      };
-      clearTimeout(timeout);
-      timeout = setTimeout(later, wait);
-      };
+        timeout = null
+        func.apply(context, args)
+      }
+      clearTimeout(timeout)
+      timeout = setTimeout(later, wait)
+    }
   }
-  function handleMouseOver2(e){
-  console.log('e in mouseover2',e)
-  tooltip.html("location: "+ e.toElement.__data__.role + "<br>" + "Count: " + e.toElement.__data__.count)
-  .style("left", (e.offsetX+10) + "px") 
-  .style("top", (e.offsetY -10) + "px")
-  .style("opacity", 1)
+  function handleMouseOver2 (e) {
+    console.log('e in mouseover2', e)
+    tooltip
+      .html(
+        'location: ' +
+          e.toElement.__data__.role +
+          '<br>' +
+          'Count: ' +
+          e.toElement.__data__.count
+      )
+      .style('left', e.offsetX + 10 + 'px')
+      .style('top', e.offsetY - 10 + 'px')
+      .style('opacity', 1)
   }
   // Create connectors between individuals and their respective department's bubble
-  const connectors = svg_bubble.selectAll('.connector')
-  .data(nodes)
-  .enter().append('line')
-  .attr('class', 'connector')
-  .attr('x1', d => {
-      const departmentBubble = bubbles.filter(b => b.role === d.role).node();
-      return departmentBubble ? parseFloat(departmentBubble.getAttribute('cx')) : 0;
-  })
-  .attr('y1', d => {
-      const departmentBubble = bubbles.filter(b => b.role === d.role).node();
-      console.log("y1",departmentBubble.getAttribute('cy'))
-      return departmentBubble ? parseFloat(departmentBubble.getAttribute('cy')) : 0;
-  })
-  .attr('x2', d => d.x)
-  .attr('y2', d => d.y);
+  const connectors = svg_bubble
+    .selectAll('.connector')
+    .data(nodes)
+    .enter()
+    .append('line')
+    .attr('class', 'connector')
+    .attr('x1', d => {
+      const departmentBubble = bubbles.filter(b => b.role === d.role).node()
+      return departmentBubble
+        ? parseFloat(departmentBubble.getAttribute('cx'))
+        : 0
+    })
+    .attr('y1', d => {
+      const departmentBubble = bubbles.filter(b => b.role === d.role).node()
+      console.log('y1', departmentBubble.getAttribute('cy'))
+      return departmentBubble
+        ? parseFloat(departmentBubble.getAttribute('cy'))
+        : 0
+    })
+    .attr('x2', d => d.x)
+    .attr('y2', d => d.y)
 
   // Create transaction bars above the employee names
-  const transactionBars = svg_bubble.selectAll('.transaction-bar-group')
-  .data(nodes)
-  .enter().append('g')
-  .attr('class', 'transaction-bar-group')
-  .selectAll('.transaction-bar')
-  .data(d => d.transactions.map((transaction, i) => ({ node: d, transaction, index: i })))
-  .enter().append('rect')
-  .attr('class', 'transaction-bar')
-  .attr('width', 10)
-  .attr('height', d => d.transaction.price * 0.5)
-  .attr('x', (d, i) => d.node.x + i * 10) // Adjust spacing between bars
-  .attr('y', d => d.node.y - 15)
-  .attr('transform', (d) => `rotate(180 ${d.node.x + (d.index * 10) + 5} ${d.node.y - 15})`)
-  .on("mouseover", debounce(handleMouseOver,10))
-  .on("mousemove",function(d){
-  tooltip
-  .style("left", (d.offsetX-40) + "px") 
-  .style("top", (d.offsetY -400) + "px")
-  .style("opacity", 1)
-
-  })
-  .on("mouseleave",function(d) {
-  d3.select("#character-name").html("NONE")
-  tooltip
-  .style("opacity", 0)})
+  const transactionBars = svg_bubble
+    .selectAll('.transaction-bar-group')
+    .data(nodes)
+    .enter()
+    .append('g')
+    .attr('class', 'transaction-bar-group')
+    .selectAll('.transaction-bar')
+    .data(d =>
+      d.transactions.map((transaction, i) => ({
+        node: d,
+        transaction,
+        index: i
+      }))
+    )
+    .enter()
+    .append('rect')
+    .attr('class', 'transaction-bar')
+    .attr('width', 10)
+    .attr('height', d => d.transaction.price * 0.5)
+    .attr('x', (d, i) => d.node.x + i * 10) // Adjust spacing between bars
+    .attr('y', d => d.node.y - 15)
+    .attr(
+      'transform',
+      d => `rotate(180 ${d.node.x + d.index * 10 + 5} ${d.node.y - 15})`
+    )
+    .on('mouseover', debounce(handleMouseOver, 10))
+    .on('mousemove', function (d) {
+      tooltip
+        .style('left', d.offsetX - 40 + 'px')
+        .style('top', d.offsetY - 400 + 'px')
+        .style('opacity', 1)
+    })
+    .on('mouseleave', function (d) {
+      d3.select('#character-name').html('NONE')
+      tooltip.style('opacity', 0)
+    })
   // Debounce function
-  function debounce(func, wait) {
-  let timeout;
-  return function () {
-  const context = this,
-  args = arguments;
-  const later = function () {
-  timeout = null;
-  func.apply(context, args);
-  };
-  clearTimeout(timeout);
-  timeout = setTimeout(later, wait);
-  };
+  function debounce (func, wait) {
+    let timeout
+    return function () {
+      const context = this,
+        args = arguments
+      const later = function () {
+        timeout = null
+        func.apply(context, args)
+      }
+      clearTimeout(timeout)
+      timeout = setTimeout(later, wait)
+    }
   }
-  function handleMouseOver(e){
-
-  tooltip.html("location: "+ e.srcElement.__data__.transaction.location+ "<br>" + "price: " + e.srcElement.__data__.transaction.price)
-  .style("left", (e.pageX+10) + "px") 
-  .style("top", (e.pageY -10) + "px")
-  .style("opacity", 1)
-
+  function handleMouseOver (e) {
+    tooltip
+      .html(
+        'location: ' +
+          e.srcElement.__data__.transaction.location +
+          '<br>' +
+          'price: ' +
+          e.srcElement.__data__.transaction.price
+      )
+      .style('left', e.pageX + 10 + 'px')
+      .style('top', e.pageY - 10 + 'px')
+      .style('opacity', 1)
   }
 
   const tooltip = d3.select(".innovative-container1")
@@ -486,136 +526,157 @@ function plot(parsedData,targetDate){
 
 
   // Create axes for each employee name
-  const axes = svg_bubble.selectAll('.axis')
-  .data(nodes)
-  .enter().append('g')
-  .attr('class', 'axis')
-  .attr('transform', d => `translate(${d.x},${d.y})`);
+  const axes = svg_bubble
+    .selectAll('.axis')
+    .data(nodes)
+    .enter()
+    .append('g')
+    .attr('class', 'axis')
+    .attr('transform', d => `translate(${d.x},${d.y})`)
 
   // Add x-axis
-  axes.append('line')
-  .attr('class', 'axis-line')
-  .attr('x1', 0)
-  .attr('y1', 0)
-  .attr('x2', 40)
-  .attr('y2', 0)
-  .attr('transform', 'translate(0,-10)');
+  axes
+    .append('line')
+    .attr('class', 'axis-line')
+    .attr('x1', 0)
+    .attr('y1', 0)
+    .attr('x2', 40)
+    .attr('y2', 0)
+    .attr('transform', 'translate(0,-10)')
 
   // Add y-axis
-  axes.append('line')
-  .attr('class', 'axis-line')
-  .attr('x1', 0)
-  .attr('y1', 0)
-  .attr('x2', 0)
-  .attr('y2', -40)
-  .attr('transform', 'translate(0,-10)');
+  axes
+    .append('line')
+    .attr('class', 'axis-line')
+    .attr('x1', 0)
+    .attr('y1', 0)
+    .attr('x2', 0)
+    .attr('y2', -40)
+    .attr('transform', 'translate(0,-10)')
 
   // Create links for the circular network graph
-  const link = svg_bubble.selectAll('.link')
-  .data(links)
-  .enter().append('line')
-  .attr('class', 'link');
+  const link = svg_bubble
+    .selectAll('.link')
+    .data(links)
+    .enter()
+    .append('line')
+    .attr('class', 'link')
 
   // Create employee names for the circular network graph
-  const employeeNames = svg_bubble.selectAll('.employee-name')
-  .data(nodes)
-  .enter().append('text')
-  .attr('class', 'employee-name')
-  .text(d => d.name);
+  const employeeNames = svg_bubble
+    .selectAll('.employee-name')
+    .data(nodes)
+    .enter()
+    .append('text')
+    .attr('class', 'employee-name')
+    .text(d => d.name)
 
   var legend = svg_bubble
-  .append("g")
-  .attr("class", "legend")
-  .attr("x",65)
-  .attr("y", 25)
-  .attr("height", 90)
-  .attr("width", 90);
+    .append('g')
+    .attr('class', 'legend')
+    .attr('x', 65)
+    .attr('y', 25)
+    .attr('height', 90)
+    .attr('width', 90)
   //  var name = ["Female Employment Rate", "Male Employment Rate"];
   //  var colors = ["#ff1393", "#058b8b"];
   legend
-  .selectAll("g")
-  .data(colorArray)
-  .enter()
-  .append("g")
-  .each(function (d, i) {
-  var g = d3.select(this);
-  g.append("rect")
-  .attr("x", 700)
-  .attr("y", i * 20 + 1113)
-  .attr("width", 12)
-  .attr("height", 12)
-  .style("fill", myColor(d));
+    .selectAll('g')
+    .data(colorArray)
+    .enter()
+    .append('g')
+    .each(function (d, i) {
+      var g = d3.select(this)
+      g.append('rect')
+        .attr('x', 700)
+        .attr('y', i * 20 + 1113)
+        .attr('width', 12)
+        .attr('height', 12)
+        .style('fill', myColor(d))
 
-  g.append("text")
-  .attr("x", 740)
-  .attr("y", i * 20 + 1125)
-  .attr("height", 30)
-  .attr("width", 90)
-  .style("fill", "black")
-  .text(d);
-  });
+      g.append('text')
+        .attr('x', 740)
+        .attr('y', i * 20 + 1125)
+        .attr('height', 30)
+        .attr('width', 90)
+        .style('fill', 'black')
+        .text(d)
+    })
 
   // Update simulation on each tick for the circular network graph
   simulation.on('tick', () => {
-  //link.attr('x1', d => {
-  //    const departmentBubble = bubbles.filter(b => b.department === d.source.department).node();
-  //    return departmentBubble ? parseFloat(departmentBubble.getAttribute('cx')) : 0;
-  //})
-  //    .attr('y1', 600)
-  //    .attr('x2', d => {
-  //        const departmentText = svg_bubble.selectAll('.employee-name').filter(e => e.department === d.target.department).node();
-  //        return departmentText ? parseFloat(departmentText.getAttribute('x')) : 0;
-  //    })
-  //    .attr('y2', d => {
-  //        const departmentText = svg_bubble.selectAll('.employee-name').filter(e => e.department === d.target.department).node();
-  //        return departmentText ? parseFloat(departmentText.getAttribute('y')) : 0;
-  //    });
-  link.attr('x1', d => {
-      //console.log(d.source)
-  const sourceNode = nodes.find(node =>  parseInt(node.id) ===  parseInt(d.source.id));
-  return sourceNode ? sourceNode.x : 0;
-  })
-  .attr('y1', d => {
-  const sourceNode = nodes.find(node => node.id === d.source.id);
-  return sourceNode ? sourceNode.y : 0;
-  })
-  .attr('x2', d => {
-  const targetNode = nodes.find(node => node.id === d.target.id);
-  return targetNode ? targetNode.x : 0;
-  })
-  .attr('y2', d => {
-  const targetNode = nodes.find(node => node.id === d.target.id);
-  return targetNode ? targetNode.y : 0;
-  });
+    //link.attr('x1', d => {
+    //    const departmentBubble = bubbles.filter(b => b.department === d.source.department).node();
+    //    return departmentBubble ? parseFloat(departmentBubble.getAttribute('cx')) : 0;
+    //})
+    //    .attr('y1', 600)
+    //    .attr('x2', d => {
+    //        const departmentText = svg_bubble.selectAll('.employee-name').filter(e => e.department === d.target.department).node();
+    //        return departmentText ? parseFloat(departmentText.getAttribute('x')) : 0;
+    //    })
+    //    .attr('y2', d => {
+    //        const departmentText = svg_bubble.selectAll('.employee-name').filter(e => e.department === d.target.department).node();
+    //        return departmentText ? parseFloat(departmentText.getAttribute('y')) : 0;
+    //    });
+    link
+      .attr('x1', d => {
+        //console.log(d.source)
+        const sourceNode = nodes.find(
+          node => parseInt(node.id) === parseInt(d.source.id)
+        )
+        return sourceNode ? sourceNode.x : 0
+      })
+      .attr('y1', d => {
+        const sourceNode = nodes.find(node => node.id === d.source.id)
+        return sourceNode ? sourceNode.y : 0
+      })
+      .attr('x2', d => {
+        const targetNode = nodes.find(node => node.id === d.target.id)
+        return targetNode ? targetNode.x : 0
+      })
+      .attr('y2', d => {
+        const targetNode = nodes.find(node => node.id === d.target.id)
+        return targetNode ? targetNode.y : 0
+      })
 
-  connectors.attr('x1', d => {
-      const departmentBubble = bubbles.filter(b => b.role === d.role).node();
-      return departmentBubble ? parseFloat(departmentBubble.getAttribute('cx')) : 0;
-  })
-  .attr('y1', d => {
-      const departmentBubble = bubbles.filter(b => b.role === d.role).node();
-      //console.log("y1",departmentBubble.getAttribute('cy'))
-      return departmentBubble ? parseFloat(departmentBubble.getAttribute('cy')) : 0;
-  })
+    connectors
+      .attr('x1', d => {
+        const departmentBubble = bubbles.filter(b => b.role === d.role).node()
+        return departmentBubble
+          ? parseFloat(departmentBubble.getAttribute('cx'))
+          : 0
+      })
+      .attr('y1', d => {
+        const departmentBubble = bubbles.filter(b => b.role === d.role).node()
+        //console.log("y1",departmentBubble.getAttribute('cy'))
+        return departmentBubble
+          ? parseFloat(departmentBubble.getAttribute('cy'))
+          : 0
+      })
       .attr('x2', d => d.x)
-      .attr('y2', d => d.y);
+      .attr('y2', d => d.y)
 
-  employeeNames.attr('x', d => d.x)
-      .attr('y', d => d.y);
+    employeeNames.attr('x', d => d.x).attr('y', d => d.y)
 
-  transactionBars.attr('x', (d, i) => d.node.x + i * 10)
+    transactionBars
+      .attr('x', (d, i) => d.node.x + i * 10)
       .attr('y', d => d.node.y - 20)
-      .attr('transform', (d) => `rotate(180 ${d.node.x + (d.index * 10) + 5} ${d.node.y - 15})`).style("fill", function (d) { return myColor(d.node.role); } )
+      .attr(
+        'transform',
+        d => `rotate(180 ${d.node.x + d.index * 10 + 5} ${d.node.y - 15})`
+      )
+      .style('fill', function (d) {
+        return myColor(d.node.role)
+      })
 
-  // Update axes position
-  axes.attr('transform', d => `translate(${d.x},${d.y})`);
-  });
-
+    // Update axes position
+    axes.attr('transform', d => `translate(${d.x},${d.y})`)
+  })
 }
 
-function make_piebar(day){
-  Promise.all([d3.csv("data/final_emp_data.csv")]).then(function (values) {
-    data = values[0];
+function make_piebar (day) {
+  Promise.all([d3.csv('data/final_emp_data.csv')]).then(function (values) {
+    data = values[0]
 
     intermediate_emp_data = data.reduce((result, currentItem) => {
       const {
@@ -626,16 +687,16 @@ function make_piebar(day){
         date,
         CarID,
         department,
-        CurrentEmploymentTitle,
-      } = currentItem;
+        CurrentEmploymentTitle
+      } = currentItem
 
-      const amount_ = parseInt(amount);
+      const amount_ = parseInt(amount)
       const existingItem = result.find(
-        (item) => item.name === name && item.date === date
-      );
+        item => item.name === name && item.date === date
+      )
 
       if (existingItem) {
-        existingItem.amount_ = Number(existingItem.amount_) + amount_;
+        existingItem.amount_ = Number(existingItem.amount_) + amount_
       } else {
         result.push({
           name,
@@ -644,56 +705,58 @@ function make_piebar(day){
           amount_,
           CurrentEmploymentTitle,
           last4ccnum,
-          CarID,
-        });
+          CarID
+        })
       }
 
-      return result;
-    }, []);
+      return result
+    }, [])
 
     intermediate_emp_data.sort((a, b) => {
-      if (a.department < b.department) return -1;
-      if (a.department > b.department) return 1;
-      return 0;
-    });
+      if (a.department < b.department) return -1
+      if (a.department > b.department) return 1
+      return 0
+    })
 
-    console.log(intermediate_emp_data);
-    console.log(day);
-    data_wrangling(day);
-  });
+    console.log(intermediate_emp_data)
+    console.log(day)
+    data_wrangling(day)
+  })
 }
-function data_wrangling(date) {
-  emp_data = intermediate_emp_data.filter((e) => e.date === date);
-  department_data = {};
+function data_wrangling (date) {
+  emp_data = intermediate_emp_data.filter(e => e.date === date)
+  department_data = {}
 
-  emp_data.forEach((emp) => {
-    const department = emp.department;
+  emp_data.forEach(emp => {
+    const department = emp.department
 
     if (department_data[department]) {
-      department_data[department]++;
+      department_data[department]++
     } else {
-      department_data[department] = 1;
+      department_data[department] = 1
     }
-  });
+  })
 
-  console.log(department_data);
-  console.log(emp_data);
+  console.log(department_data)
+  console.log(emp_data)
 
-  draw_barchart();
+  draw_barchart()
 }
 
-function draw_barchart() {
-  var innerRadius = 220;
-  var outerRadius = Math.min(width_bp, height_bp) / 2;
+function draw_barchart () {
+  d3.select('#barpie>g').selectAll('*').remove()
+
+  var innerRadius = 220
+  var outerRadius = Math.min(width_bp, height_bp) / 2
   var x = d3
     .scaleBand()
     .range([0, 2 * Math.PI])
     .align(0)
     .domain(
       emp_data.map(function (d) {
-        return d.name;
+        return d.name
       })
-    );
+    )
 
   var y = d3
     .scaleRadial()
@@ -702,59 +765,59 @@ function draw_barchart() {
       1,
       Math.max(
         ...emp_data.map(function (d) {
-          return d.amount_;
+          return d.amount_
         })
-      ),
-    ]);
+      )
+    ])
 
   var color = d3
     .scaleOrdinal()
     .domain(
       intermediate_emp_data.map(function (d) {
-        return d.department;
+        return d.department
       })
     )
-    .range(d3.schemeSet3);
+    .range(d3.schemeSet3)
 
   var paths = bar_svg
-    .append("g")
-    .selectAll(".bars")
+    .append('g')
+    .selectAll('.bars')
     .data(emp_data)
-    .join("path")
-    .attr("class", "bars")
+    .join('path')
+    .attr('class', 'bars')
     .attr(
-      "d",
+      'd',
       d3
         .arc()
         .innerRadius(innerRadius)
-        .outerRadius((d) => y(d["amount_"]))
-        .startAngle((d) => x(d.name))
-        .endAngle((d) => x(d.name) + x.bandwidth())
+        .outerRadius(d => y(d['amount_']))
+        .startAngle(d => x(d.name))
+        .endAngle(d => x(d.name) + x.bandwidth())
         .padAngle(0.01)
         .padRadius(innerRadius)
     )
-    .attr("fill", function (d, i) {
-      return color(d.department);
+    .attr('fill', function (d, i) {
+      return color(d.department)
     })
-    .attr("stroke", "black")
-    .style("stroke-width", "0.75px");
+    .attr('stroke', 'black')
+    .style('stroke-width', '0.75px')
 
   var pie = d3
     .pie()
-    .value((d) => d[1])
+    .value(d => d[1])
     .sort(function (a, b) {
-      return b[1] > a[1];
-    });
-  var data_ready = pie(Object.entries(department_data));
+      return b[1] > a[1]
+    })
+  var data_ready = pie(Object.entries(department_data))
 
   bar_svg
-    .append("g")
-    .selectAll("pie")
+    .append('g')
+    .selectAll('pie')
     .data(data_ready)
-    .join("path")
-    .attr("class", "pie")
+    .join('path')
+    .attr('class', 'pie')
     .attr(
-      "d",
+      'd',
       d3
         .arc()
         .innerRadius(0)
@@ -762,22 +825,22 @@ function draw_barchart() {
         .padAngle(0.005)
         .padRadius(innerRadius)
     )
-    .attr("fill", (d) => color(d.data[0]))
-    .attr("stroke", "black")
-    .style("stroke-width", "0.5px");
+    .attr('fill', d => color(d.data[0]))
+    .attr('stroke', 'black')
+    .style('stroke-width', '0.5px')
 
   //pie labels
   bar_svg
-    .selectAll("pie")
+    .selectAll('pie')
     .data(data_ready)
     .enter()
-    .append("text")
+    .append('text')
     .text(function (d) {
-      return d.data[0] + "";
+      return d.data[0] + ''
     })
-    .attr("transform", function (d) {
+    .attr('transform', function (d) {
       return (
-        "translate(" +
+        'translate(' +
         d3
           .arc()
           .innerRadius(0)
@@ -785,102 +848,102 @@ function draw_barchart() {
           .padAngle(0.01)
           .padRadius(innerRadius)
           .centroid(d) +
-        ")"
-      );
+        ')'
+      )
     })
-    .style("text-anchor", "middle")
-    .style("font-size", 15);
+    .style('text-anchor', 'middle')
+    .style('font-size', 15)
 
   //bar labels
   bar_svg
-    .append("g")
-    .selectAll("g")
+    .append('g')
+    .selectAll('g')
     .data(emp_data)
-    .join("g")
-    .attr("text-anchor", function (d) {
+    .join('g')
+    .attr('text-anchor', function (d) {
       return (x(d.name) + x.bandwidth() / 2 + Math.PI) % (2 * Math.PI) < Math.PI
-        ? "end"
-        : "start";
+        ? 'end'
+        : 'start'
     })
-    .attr("transform", function (d) {
+    .attr('transform', function (d) {
       return (
-        "rotate(" +
+        'rotate(' +
         (((x(d.name) + x.bandwidth() / 2) * 180) / Math.PI - 90) +
-        ")" +
-        "translate(" +
-        (y(d["amount_"]) + 10) +
-        ",0)"
-      );
+        ')' +
+        'translate(' +
+        (y(d['amount_']) + 10) +
+        ',0)'
+      )
     })
-    .append("text")
+    .append('text')
     .text(function (d) {
-      return d.name + " ";
+      return d.name + ' '
     })
-    .attr("transform", function (d) {
+    .attr('transform', function (d) {
       return (x(d.name) + x.bandwidth() / 2 + Math.PI) % (2 * Math.PI) < Math.PI
-        ? "rotate(180)"
-        : "rotate(0)";
+        ? 'rotate(180)'
+        : 'rotate(0)'
     })
-    .style("font-size", 12)
-    .attr("alignment-baseline", "middle");
+    .style('font-size', 12)
+    .attr('alignment-baseline', 'middle')
 
   //tooltip
   var Tooltip = d3
-    .selectAll(".innovative-container")
-    .style("left", "0px")
-    .style("top", "0px")
-    .append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0)
-    .attr("class", "tooltip")
-    .style("background-color", "white")
-    .style("z-index", "100")
-    .style("border", "solid")
-    .style("position", "fixed")
-    .style("border-width", "2px")
-    .style("border-radius", "5px")
-    .style("padding", "5px");
+    .selectAll('.innovative-container')
+    .style('left', '0px')
+    .style('top', '0px')
+    .append('div')
+    .attr('class', 'tooltip')
+    .style('opacity', 0)
+    .attr('class', 'tooltip')
+    .style('background-color', 'white')
+    .style('z-index', '100')
+    .style('border', 'solid')
+    .style('position', 'fixed')
+    .style('border-width', '2px')
+    .style('border-radius', '5px')
+    .style('padding', '5px')
 
   //bar tooltip
   bar_svg
-    .selectAll(".bars")
-    .on("mouseover", function (d, i) {
+    .selectAll('.bars')
+    .on('mouseover', function (d, i) {
       // console.log("mouseover")
-      Tooltip.html(i.name + "<br>" + "Amount: $" + i.amount_);
-      Tooltip.style("opacity", 1);
+      Tooltip.html(i.name + '<br>' + 'Amount: $' + i.amount_)
+      Tooltip.style('opacity', 1)
     })
-    .on("mousemove", function (d, i) {
+    .on('mousemove', function (d, i) {
       // console.log("mousemove")
-      Tooltip.html(i.name + "<br>" + "Amount: $" + i.amount_)
-        .style("left", event.screenX + "px")
-        .style("top", event.screenY - 75 + "px");
+      Tooltip.html(i.name + '<br>' + 'Amount: $' + i.amount_)
+        .style('left', event.screenX + 'px')
+        .style('top', event.screenY - 75 + 'px')
     })
-    .on("mouseout", function (d, i) {
-      Tooltip.style("opacity", 0).style("left", "0px").style("top", "0px");
-    });
+    .on('mouseout', function (d, i) {
+      Tooltip.style('opacity', 0).style('left', '0px').style('top', '0px')
+    })
 
   bar_svg
-    .selectAll(".pie")
-    .on("mouseover", function (d, i) {
-      Tooltip.html(i.data[0] + ": " + i.data[1]);
-      Tooltip.style("opacity", 1);
+    .selectAll('.pie')
+    .on('mouseover', function (d, i) {
+      Tooltip.html(i.data[0] + ': ' + i.data[1])
+      Tooltip.style('opacity', 1)
     })
-    .on("mousemove", function (d, i) {
-      Tooltip.html(i.data[0] + ": " + i.data[1]);
-      Tooltip.style("opacity", 1)
-        .style("left", event.screenX + "px")
-        .style("top", event.screenY - 75 + "px");
+    .on('mousemove', function (d, i) {
+      Tooltip.html(i.data[0] + ': ' + i.data[1])
+      Tooltip.style('opacity', 1)
+        .style('left', event.screenX + 'px')
+        .style('top', event.screenY - 75 + 'px')
     })
-    .on("mouseout", function (d, i) {
-      Tooltip.style("opacity", 0).style("left", "0px").style("top", "0px");
-    });
+    .on('mouseout', function (d, i) {
+      Tooltip.style('opacity', 0).style('left', '0px').style('top', '0px')
+    })
 }
 
-function amount_ts(){
-  TimeseriesAmount(name_ts,location_ts,timestamp_ts)
+function amount_ts () {
+  TimeseriesAmount(name_ts, location_ts, timestamp_ts)
 }
-function freq_ts(){
-  TimeseriesFrequency(name_ts,location_ts,timestamp_ts)
+function freq_ts () {
+  TimeseriesFrequency(name_ts, location_ts, timestamp_ts)
 }
 
 function make_network (location, timestamp) {
@@ -951,30 +1014,30 @@ function make_network (location, timestamp) {
     console.log('Person data final')
     console.log(person)
 
-    var link = g_ng.selectAll('.ln').data(ds);
-    link.exit().remove();
-    link = link.enter().append('line').attr('class', 'ln').merge(link);
-    link.style('stroke', '#aaa');
+    var link = g_ng.selectAll('.ln').data(ds)
+    link.exit().remove()
+    link = link.enter().append('line').attr('class', 'ln').merge(link)
+    link.style('stroke', '#aaa')
 
-    var weightText = g_ng.selectAll('.txt').data(ds);
-    weightText.exit().remove();
-    weightText = weightText.enter().append('text').attr('class', 'txt').merge(weightText);
+    var weightText = g_ng.selectAll('.txt').data(ds)
+    weightText.exit().remove()
+    weightText = weightText
+      .enter()
+      .append('text')
+      .attr('class', 'txt')
+      .merge(weightText)
     weightText
       .attr('text-anchor', 'middle')
       .attr('alignment-baseline', 'middle')
       .text(function (d) {
-        return d.weight;
-      });
+        return d.weight
+      })
 
-    var node = g_ng
-      .selectAll('.circ')
-      .data(person)
-    node.exit().remove();
-    var extra_nodes=node.enter()
-      .append('g')
-      .attr('class', 'circ')
-      // .merge(node)
-    
+    var node = g_ng.selectAll('.circ').data(person)
+    node.exit().remove()
+    var extra_nodes = node.enter().append('g').attr('class', 'circ')
+    // .merge(node)
+
     extra_nodes.append('circle').attr('r', 20).style('fill', '#69b3a2')
 
     extra_nodes
@@ -988,37 +1051,54 @@ function make_network (location, timestamp) {
       .style('fill', 'black')
       .style('font-size', '7px')
 
-    node=node.merge(extra_nodes)
-    node.style('cursor', 'pointer')
-      .on('click', function (event, d) {
-        d3.select('#histogram').selectAll('*').remove()
-        d3.select("#time-series-chart").selectAll("*").remove();
-        make_histogram(d.Name)
-        name_ts=d.Name
-        timestamp_ts=timestamp
-        location_ts=location
-      })
+    node = node.merge(extra_nodes)
+    node.style('cursor', 'pointer').on('click', function (event, d) {
+      d3.select('#histogram').selectAll('*').remove()
+      d3.select('#time-series-chart').selectAll('*').remove()
+      make_histogram(d.Name)
+      name_ts = d.Name
+      timestamp_ts = timestamp
+      location_ts = location
+    })
 
-    var simulation = d3.forceSimulation(person)
-    .force('link', d3.forceLink(ds).id(function (d) { return d.id; }))
-    .force('charge', d3.forceManyBody().strength(-400))
-    .force('center', d3.forceCenter(width_ng / 2, height_ng / 2))
-    .on('end', ticked);
-    simulation.alphaDecay(0.1).restart();
-    function ticked() {
+    var simulation = d3
+      .forceSimulation(person)
+      .force(
+        'link',
+        d3.forceLink(ds).id(function (d) {
+          return d.id
+        })
+      )
+      .force('charge', d3.forceManyBody().strength(-1500))
+      .force('center', d3.forceCenter(width_ng / 2, height_ng / 2))
+      .on('end', ticked)
+    simulation.alphaDecay(0.1).restart()
+    function ticked () {
       link
-        .attr('x1', function (d) { return d.source.x; })
-        .attr('y1', function (d) { return d.source.y; })
-        .attr('x2', function (d) { return d.target.x; })
-        .attr('y2', function (d) { return d.target.y; });
-    
+        .attr('x1', function (d) {
+          return d.source.x
+        })
+        .attr('y1', function (d) {
+          return d.source.y
+        })
+        .attr('x2', function (d) {
+          return d.target.x
+        })
+        .attr('y2', function (d) {
+          return d.target.y
+        })
+
       weightText
-        .attr('x', function (d) { return (d.source.x + d.target.x) / 2; })
-        .attr('y', function (d) { return (d.source.y + d.target.y) / 2; });
-    
+        .attr('x', function (d) {
+          return (d.source.x + d.target.x) / 2
+        })
+        .attr('y', function (d) {
+          return (d.source.y + d.target.y) / 2
+        })
+
       node.attr('transform', function (d) {
-        return 'translate(' + (d.x + 6) + ',' + (d.y - 6) + ')';
-      });
+        return 'translate(' + (d.x + 6) + ',' + (d.y - 6) + ')'
+      })
     }
   })
 }
@@ -1202,7 +1282,7 @@ function make_histogram (employee_name) {
 }
 
 function TimeseriesAmount (employee_name, location, targetDate) {
-  d3.select("#time-series-chart").selectAll("*").remove();
+  d3.select('#time-series-chart').selectAll('*').remove()
   console.log(targetDate)
   d3.csv('data/timeseries_data.csv').then(function (data) {
     data.forEach(function (d) {
@@ -1336,7 +1416,7 @@ function TimeseriesAmount (employee_name, location, targetDate) {
 }
 
 function TimeseriesFrequency (employee_name, location, day) {
-  d3.select("#time-series-chart").selectAll("*").remove();
+  d3.select('#time-series-chart').selectAll('*').remove()
   d3.csv('data/timeseries_data.csv').then(function (data) {
     day = new Date(day)
     data.forEach(function (d) {
