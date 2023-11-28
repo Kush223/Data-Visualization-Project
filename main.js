@@ -14,7 +14,9 @@ let date2_container = document.getElementById('network-date-container')
 let location1_container = document.getElementById('network-location-container')
 let location2_container = document.getElementById('time-location-container')
 let employee_container = document.getElementById('time-employee-container')
+
 document.addEventListener('DOMContentLoaded', function () {
+  dateSlider()
   Promise.all([d3.csv('data/heatmap_data.csv')]).then(function (values) {
     heatmap_data = values[0]
     console.log(heatmap_data)
@@ -262,6 +264,43 @@ document.addEventListener('DOMContentLoaded', function () {
   })
 })
 
+function dateSlider () {
+  const slider = document.getElementById('slider')
+  const thumb = document.getElementById('thumb')
+  const datesDropDown = document.getElementById('attribute-select')
+
+  tickLabels = [
+    '2014-01-06',
+    '2014-01-07',
+    '2014-01-08',
+    '2014-01-09',
+    '2014-01-10',
+    '2014-01-11',
+    '2014-01-12',
+    '2014-01-13',
+    '2014-01-14',
+    '2014-01-15',
+    '2014-01-16',
+    '2014-01-17',
+    '2014-01-18',
+    '2014-01-19'
+  ]
+
+  attributeSelect = d3.select('#attribute-select')
+  attributeSelect
+    .selectAll('option')
+    .data(tickLabels)
+    .enter()
+    .append('option')
+    .attr('value', d => d)
+    .text(d => d)
+
+  datesDropDown.addEventListener('input', function () {
+    console.log(this.value)
+    make_piebar(this.value)
+  })
+}
+
 function make_innovative (targetDate) {
   Promise.all([d3.csv('data/Scatter_Network_Bubble.csv')]).then(function (
     values
@@ -401,8 +440,8 @@ function plot (parsedData, targetDate) {
     .on('mouseover', debounce2(handleMouseOver2, 10))
     .on('mousemove', function (d) {
       tooltip
-        .style('left',d.offsetX + 'px')
-        .style('top', d.offsetY+ 'px')
+        .style('left', d.offsetX + 'px')
+        .style('top', d.offsetY + 'px')
         .style('opacity', 1)
     })
     .on('mouseleave', function (d) {
@@ -490,8 +529,8 @@ function plot (parsedData, targetDate) {
     .on('mouseover', debounce(handleMouseOver, 10))
     .on('mousemove', function (d) {
       tooltip
-        .style('left', d.offsetX  + 'px')
-        .style('top', d.offsetY+ 'px')
+        .style('left', d.offsetX + 'px')
+        .style('top', d.offsetY + 'px')
         .style('opacity', 1)
     })
     .on('mouseleave', function (d) {
@@ -937,7 +976,7 @@ function draw_barchart () {
         .style('top', event.screenY - 75 + 'px')
     })
     .on('mouseout', function (d, i) {
-      Tooltip.style('opacity', 0).style("left","0px").style("top","0px")
+      Tooltip.style('opacity', 0).style('left', '0px').style('top', '0px')
     })
 
   bar_svg
@@ -1235,12 +1274,11 @@ function make_histogram (employee_name) {
 
     // Legend
     var legendColors = ['black', 'blue']
-    var legend = svg_hg
-      .append('g')
-      .attr(
-        'transform',
-        `translate(${Innerwidth + margin.left + 10},${margin.top})`
-      )
+    var legend = svg_hg.append('g').attr(
+      'transform',
+      // `translate(${Innerwidth + margin.left + 10},${margin.top})`
+      'translate(550, 50)'
+    )
 
     legend
       .selectAll('.legend-item')
@@ -1262,23 +1300,20 @@ function make_histogram (employee_name) {
           .append('text')
           .attr('x', 25)
           .attr('y', 9)
-          .attr('dy', '.35em')
+          .attr('dy', '.1em')
           .style('text-anchor', 'start')
           .text(d)
       }).style("fill","white")
       
     // Add legend for the specified employee_name
     var customlegendColors = ['red', 'orange']
-    var customLegend = svg_hg
-      .append('g')
-      .attr(
-        'transform',
-        `translate(${Innerwidth + margin.left + 10},${
-          margin.top + legendColors.length * 20 + 10
-        })`
-        
-        
-      )
+    var customLegend = svg_hg.append('g').attr(
+      'transform',
+      // `translate(${Innerwidth + margin.left + 10},${
+      //   margin.top + legendColors.length * 20 + 10
+      // })`
+      'translate(550, 100)'
+    )
 
     customLegend
       .selectAll('.customlegend-item')
