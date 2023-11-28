@@ -137,6 +137,8 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('Clicked cell:', d)
         // d3.select('#networkGraph').remove()
         make_network(d.location, d.timestamp)
+        d3.select('#histogram').selectAll('*').remove()
+        d3.select("#time-series-chart").selectAll("*").remove();
         make_piebar(d.timestamp)
         make_innovative(d.timestamp)
       })
