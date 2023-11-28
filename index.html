@@ -10,88 +10,13 @@
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <link rel="stylesheet" href="./styles.css">
 </head>
-<style>
-  #heat-container {
-    /* background-color: white;
-    border: 1px solid #d3d3d3;
-    border-radius: 3px; */
-  }
-
-  #networkGraph {
-    width: 1000px;
-    height: 500px;
-    /* background-color: white;
-    border: 1px solid #d3d3d3;
-    border-radius: 3px; */
-  }
-
-  #histogram {
-    width: 1000px;
-    height: 650px;
-    /* background-color: white;
-    border: 1px solid #d3d3d3;
-    border-radius: 3px; */
-    display: block;
-  }
-
-  #time-series-chart {
-    width: 1000px;
-    height: 500px;
-    /* background-color: white;
-    border: 1px solid #d3d3d3;
-    border-radius: 3px; */
-    display: block;
-  }
-  .link {
-      stroke: #999;
-      stroke-opacity: 0.6;
-  }
-
-  .employee-name {
-      font-size: 12px;
-      text-anchor: middle;
-  }
-
-  .bubble {
-      fill: lightcoral;
-      stroke: #fff;
-      stroke-width: 2px;
-  }
-
-  .bubble-label {
-      font-size: 12px;
-      text-anchor: middle;
-  }
-
-  .connector {
-      stroke: #ccc;
-      stroke-dasharray: 5,5;
-  }
-
-  .line-to-name {
-      stroke: #ccc;
-      stroke-dasharray: 5,5;
-  }
-
-  .transaction-bar {
-      fill: steelblue;
-  }
-
-  .axis-line {
-      stroke: #333;
-      stroke-width: 1;
-  }
-
-  .axis-text {
-      font-size: 10px;
-      fill: #333;
-  }
-</style>
 
 <body>
 
-  <div class="container text-center">
-    <h1 class="m-2">Data Visualizations</h1>
+  <div class="container">
+    <div class="text-center">
+      <h1 class="m-2">Data Visualization</h1>
+    </div>
 
     <div class="heat-container m-4">
       <div class="row">
@@ -102,29 +27,27 @@
       </div>
     </div>
 
-    <div class="innovative-container m-4">
-      <div class="row">
-        <div class="col">
+    <div class="row">
+      <div class="col-6">
+        <div class="innovative-container m-4 text-start">
           <h2 class="mb-4">Bar Pie Chart</h2>
           <svg id="barpie"></svg>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="network-container m-4 text-end">
+          <h2>Network Graph</h2>
+          <svg id="networkGraph"></svg>
         </div>
       </div>
     </div>
 
     <div class="innovative-container1 m-4">
       <div class="row">
-        <div class="col">
+        <div class="col-6">
           <h2 class="mb-4">Bubble Network Bar Chart</h2>
           <svg id="bnbc"></svg>
-        </div>
-      </div>
-    </div>
-
-    <div class="network-container m-4">
-      <div class="row">
-        <div class="col">
-          <h2>Network Graph</h2>
-          <svg id="networkGraph"></svg>
         </div>
       </div>
     </div>

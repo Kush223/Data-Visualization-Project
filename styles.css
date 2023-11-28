@@ -6,9 +6,10 @@
   box-sizing: border-box;
   font-family: 'Raleway', sans-serif;
   font-weight: bold;
+}
+body{
   /* overflow-x: hidden; */
 }
-
 h1 {
   text-align: center;
   margin-bottom: 30px;
@@ -34,4 +35,70 @@ h1 {
 
 .dropdown-menu li a{
   cursor: pointer;
+}
+
+#networkGraph {
+  width: 1000px;
+  height: 870px;
+}
+
+#barpie {
+  width: 1000px;
+  height: 870px;
+}
+
+#histogram {
+  width: 1000px;
+  height: 800px;
+  display: block;
+}
+
+#time-series-chart {
+  width: 1000px;
+  height: 600px;
+  display: block;
+}
+.link {
+    stroke: #999;
+    stroke-opacity: 0.6;
+}
+
+.employee-name {
+    font-size: 12px;
+    text-anchor: middle;
+}
+
+.bubble {
+    fill: lightcoral;
+    stroke: #fff;
+    stroke-width: 2px;
+}
+
+.bubble-label {
+    font-size: 12px;
+    text-anchor: middle;
+}
+
+.connector {
+    stroke: #ccc;
+    stroke-dasharray: 5,5;
+}
+
+.line-to-name {
+    stroke: #ccc;
+    stroke-dasharray: 5,5;
+}
+
+.transaction-bar {
+    fill: steelblue;
+}
+
+.axis-line {
+    stroke: #333;
+    stroke-width: 1;
+}
+
+.axis-text {
+    font-size: 10px;
+    fill: #333;
 }
