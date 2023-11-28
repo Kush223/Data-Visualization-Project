@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     width_bp = 860
     height_bp = 760
 
-    svg_bubble = d3.select('#bnbc').attr('width', 3000).attr('height', 3000)
+    svg_bubble = d3.select('#bnbc').attr('width', 1500).attr('height', 870)
 
     bar_svg = d3
       .select('#barpie')
@@ -332,7 +332,7 @@ function plot(parsedData,targetDate){
         .distance(2)
     )
     .force('charge', d3.forceManyBody().strength(-123))
-    .force('center', d3.forceCenter(1000, 1000))
+    .force('center', d3.forceCenter(400, 400))
     .force('collide', d3.forceCollide().radius(20))
 
   // Count the number of job roles under each department
@@ -358,17 +358,17 @@ function plot(parsedData,targetDate){
     .style('fill', function (d) {
       return myColor(d.role)
     })
-    .attr('r', d => d.count * 15)
+    .attr('r', d => d.count * 7)
     .attr('cx', function (d, i) {
       let st = d.count
       let ans
       console.log('count', st, i)
       if (i < 6) {
-        ans = i * 110 + 1480
+        ans = i * 60 + 800
       } else if (i < 12) {
-        ans = parseInt(i % 6) * 110 + 1480
+        ans = parseInt(i % 6) * 60 + 800
       } else {
-        ans = parseInt(i % 12) * 110 + 1480
+        ans = parseInt(i % 12) * 60 + 800
       }
       return ans
     })
@@ -377,19 +377,19 @@ function plot(parsedData,targetDate){
       let ans
       console.log('count', st, i)
       if (i < 6) {
-        ans = 700
+        ans = 200
       } else if (i < 12) {
-        ans = 1000
+        ans = 350
       } else {
-        ans = 1300
+        ans = 500
       }
       return ans
     })
     .on('mouseover', debounce2(handleMouseOver2, 10))
     .on('mousemove', function (d) {
       tooltip
-        .style('left', d.offsetX - 810 + 'px')
-        .style('top', d.offsetY - 500 + 'px')
+        .style('left',d.offsetX + 'px')
+        .style('top', d.offsetY+ 'px')
         .style('opacity', 1)
     })
     .on('mouseleave', function (d) {
@@ -421,8 +421,8 @@ function plot(parsedData,targetDate){
           'Count: ' +
           e.toElement.__data__.count
       )
-      .style('left', e.offsetX + 10 + 'px')
-      .style('top', e.offsetY - 10 + 'px')
+      .style('left', e.screenX - 500 + 'px')
+      .style('top', e.offsetY + 'px')
       .style('opacity', 1)
   }
   // Create connectors between individuals and their respective department's bubble
@@ -477,8 +477,8 @@ function plot(parsedData,targetDate){
     .on('mouseover', debounce(handleMouseOver, 10))
     .on('mousemove', function (d) {
       tooltip
-        .style('left', d.offsetX - 40 + 'px')
-        .style('top', d.offsetY - 400 + 'px')
+        .style('left', d.offsetX  + 'px')
+        .style('top', d.offsetY+ 'px')
         .style('opacity', 1)
     })
     .on('mouseleave', function (d) {
@@ -508,8 +508,8 @@ function plot(parsedData,targetDate){
           'price: ' +
           e.srcElement.__data__.transaction.price
       )
-      .style('left', e.pageX + 10 + 'px')
-      .style('top', e.pageY - 10 + 'px')
+      .style('left', e.offsetX + 10 + 'px')
+      .style('top', e.offsetY - 10 + 'px')
       .style('opacity', 1)
   }
 
@@ -576,7 +576,7 @@ function plot(parsedData,targetDate){
     .attr('class', 'legend')
     .attr('x', 65)
     .attr('y', 25)
-    .attr('height', 90)
+    .attr('height', 60)
     .attr('width', 90)
   //  var name = ["Female Employment Rate", "Male Employment Rate"];
   //  var colors = ["#ff1393", "#058b8b"];
@@ -588,19 +588,20 @@ function plot(parsedData,targetDate){
     .each(function (d, i) {
       var g = d3.select(this)
       g.append('rect')
-        .attr('x', 700)
-        .attr('y', i * 20 + 1113)
-        .attr('width', 12)
-        .attr('height', 12)
+        .attr('x', 200)
+        .attr('y', i * 20 + 475)
+        .attr('width', 7)
+        .attr('height', 7)
         .style('fill', myColor(d))
 
       g.append('text')
-        .attr('x', 740)
-        .attr('y', i * 20 + 1125)
-        .attr('height', 30)
+        .attr('x', 210)
+        .attr('y', i * 20 + 483)
+        .attr('height', 20)
         .attr('width', 90)
         .style('fill', 'black')
         .text(d)
+        .style('font-size', 10)
     })
 
   // Update simulation on each tick for the circular network graph
