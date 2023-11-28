@@ -6,10 +6,11 @@
   box-sizing: border-box;
   font-family: 'Raleway', sans-serif;
   font-weight: bold;
+  /* background-color: #ccc; */
 }
-body{
-  /* overflow-x: hidden; */
-}
+/* body{
+  overflow-x: hidden;
+} */
 h1 {
   text-align: center;
   margin-bottom: 30px;
