@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     margin_hm = { top: 50, right: 50, bottom: 50, left: 80 }
     width_hm = 800 - margin_hm.left - margin_hm.right
     height_hm = 600 - margin_hm.top - margin_hm.bottom
-    width_bp = 860
+    width_bp = 760
     height_bp = 760
 
     svg_bubble = d3.select('#bnbc').attr('width', 3000).attr('height', 3000)
@@ -225,8 +225,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var Tooltip_heatmap = d3
       .selectAll('.heat-container')
-      // .style('left', '0px')
-      // .style('top', '0px')
+      .style('left', '0px')
+      .style('top', '0px')
       .append('div')
       .attr('class', 'tooltip')
       .style('opacity', 0)
@@ -252,8 +252,8 @@ document.addEventListener('DOMContentLoaded', function () {
       })
       .on('mouseout', function (d, i) {
         Tooltip_heatmap.style('opacity', 0)
-          // .style('left', '0px')
-          // .style('top', '0px')
+          .style('left', '0px')
+          .style('top', '0px')
       })
   })
 })
@@ -757,7 +757,7 @@ function data_wrangling (date) {
 function draw_barchart () {
   d3.select('#barpie>g').selectAll('*').remove()
 
-  var innerRadius = 220
+  var innerRadius = 150
   var outerRadius = Math.min(width_bp, height_bp) / 2
   var x = d3
     .scaleBand()
@@ -855,7 +855,7 @@ function draw_barchart () {
         d3
           .arc()
           .innerRadius(0)
-          .outerRadius(innerRadius + 100)
+          .outerRadius(innerRadius + 60)
           .padAngle(0.01)
           .padRadius(innerRadius)
           .centroid(d) +
@@ -930,7 +930,7 @@ function draw_barchart () {
         .style('top', event.screenY - 75 + 'px')
     })
     .on('mouseout', function (d, i) {
-      Tooltip.style('opacity', 0)
+      Tooltip.style('opacity', 0).style("left","0px").style("top","0px")
     })
 
   bar_svg
