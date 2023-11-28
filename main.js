@@ -35,8 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
       .append('g')
       .attr('transform', `translate(${width_bp / 2}, ${height_bp / 2 + 100})`)
       .style('fill', 'white')
-    svg_ts = d3.select('#time-series-chart')
-    .style('fill', 'white')
+    svg_ts = d3.select('#time-series-chart').style('fill', 'white')
 
     width_ts = +svg_ts.style('width').replace('px', '')
     height_ts = +svg_ts.style('height').replace('px', '')
@@ -50,7 +49,8 @@ document.addEventListener('DOMContentLoaded', function () {
       .attr('width', Innerwidth)
       .attr('height', Innerheight)
       .append('g')
-      .attr('transform', `translate(${margin_ts.left},${margin_ts.top})`)   .style('fill', 'white')
+      .attr('transform', `translate(${margin_ts.left},${margin_ts.top})`)
+      .style('fill', 'white')
 
     svg_hg = d3.select('#histogram')
     svg_hm = d3
@@ -68,7 +68,8 @@ document.addEventListener('DOMContentLoaded', function () {
       .select('#networkGraph')
       .append('svg')
       .attr('width', width_ng + margin_ng.left + margin_ng.right)
-      .attr('height', height_ng + margin_ng.top + margin_ng.bottom)    .style('fill', 'white')
+      .attr('height', height_ng + margin_ng.top + margin_ng.bottom)
+      .style('fill', 'white')
     g_ng = svg_ng
       .append('g')
       .attr(
@@ -293,6 +294,7 @@ function dateSlider () {
     .enter()
     .append('option')
     .attr('value', d => d)
+    .style('color', 'black')
     .text(d => d)
 
   datesDropDown.addEventListener('input', function () {
@@ -467,7 +469,7 @@ function plot (parsedData, targetDate) {
     console.log('e in mouseover2', e)
     tooltip
       .html(
-        'location: ' +
+        'Employee Title: ' +
           e.toElement.__data__.role +
           '<br>' +
           'Count: ' +
@@ -554,10 +556,10 @@ function plot (parsedData, targetDate) {
   function handleMouseOver (e) {
     tooltip
       .html(
-        'location: ' +
+        'Location: ' +
           e.srcElement.__data__.transaction.location +
           '<br>' +
-          'price: ' +
+          'Amount Spent: ' +
           e.srcElement.__data__.transaction.price
       )
       .style('left', e.offsetX + 10 + 'px')
@@ -622,7 +624,7 @@ function plot (parsedData, targetDate) {
     .append('text')
     .attr('class', 'employee-name')
     .text(d => d.name)
-    .style("fill","white")
+    .style('fill', 'white')
 
   var legend = svg_bubble
     .append('g')
@@ -655,7 +657,6 @@ function plot (parsedData, targetDate) {
         .style('fill', 'white')
         .text(d)
         .style('font-size', 10)
-
     })
 
   // Update simulation on each tick for the circular network graph
@@ -1233,7 +1234,7 @@ function make_histogram (employee_name) {
       )
       .style('text-anchor', 'middle')
       .text('Loyalty/Credit Card Expenditure')
-      .style('fill','white')
+      .style('fill', 'white')
 
     svg_hg
       .selectAll('.credit-card-bar')
@@ -1303,8 +1304,9 @@ function make_histogram (employee_name) {
           .attr('dy', '.1em')
           .style('text-anchor', 'start')
           .text(d)
-      }).style("fill","white")
-      
+      })
+      .style('fill', 'white')
+
     // Add legend for the specified employee_name
     var customlegendColors = ['red', 'orange']
     var customLegend = svg_hg.append('g').attr(
@@ -1338,7 +1340,7 @@ function make_histogram (employee_name) {
           .attr('dy', '.35em')
           .style('text-anchor', 'start')
           .text(d)
-          .style("fill","white")
+          .style('fill', 'white')
       })
   })
 }
