@@ -9,6 +9,9 @@ let name_ts,
   margin_ts,
   width_ts,
   height_ts
+let date1_container = document.getElementById('barpie-date-container')
+let date2_container = document.getElementById('network-date-container')
+let location_container = document.getElementById('network-location-container')
 document.addEventListener('DOMContentLoaded', function () {
   Promise.all([d3.csv('data/heatmap_data.csv')]).then(function (values) {
     heatmap_data = values[0]
@@ -272,12 +275,16 @@ function make_innovative (targetDate) {
     plot(parsedData, targetDate)
   })
 }
-function plot(parsedData,targetDate){
+function plot (parsedData, targetDate) {
   // console.log(parsedData);
   // console.log(targetDate);
-  const filteredData = parsedData.filter(item => item.day === targetDate);
+  const filteredData = parsedData.filter(item => item.day === targetDate)
   // console.log(filteredData);
-  const groupedData = d3.group(filteredData, d => `${d.CarID}-${d.CurrentEmploymentTitle}-${d.CurrentEmploymentType}-${d.FullName}`);
+  const groupedData = d3.group(
+    filteredData,
+    d =>
+      `${d.CarID}-${d.CurrentEmploymentTitle}-${d.CurrentEmploymentType}-${d.FullName}`
+  )
   const aggregatedData = Array.from(groupedData, ([key, values]) => {
     const [id, role, department, name] = key.split('-')
     const transactions = values.map(d => ({
@@ -513,17 +520,17 @@ function plot(parsedData,targetDate){
       .style('opacity', 1)
   }
 
-  const tooltip = d3.select(".innovative-container1")
-  .append("div")
-  .style("opacity", 0)
-  .style("position","fixed")
-  .attr("class", "tooltip")
-  .style("background-color", "white")
-  .style("border", "solid")
-  .style("border-width", "2px")
-  .style("border-radius", "5px")
-  .style("padding", "10px")
-
+  const tooltip = d3
+    .select('.innovative-container1')
+    .append('div')
+    .style('opacity', 0)
+    .style('position', 'fixed')
+    .attr('class', 'tooltip')
+    .style('background-color', 'white')
+    .style('border', 'solid')
+    .style('border-width', '2px')
+    .style('border-radius', '5px')
+    .style('padding', '10px')
 
   // Create axes for each employee name
   const axes = svg_bubble
@@ -726,6 +733,8 @@ function make_piebar (day) {
 function data_wrangling (date) {
   emp_data = intermediate_emp_data.filter(e => e.date === date)
   department_data = {}
+
+  date1_container.innerHTML = 'Day : ' + date
 
   emp_data.forEach(emp => {
     const department = emp.department
@@ -947,6 +956,8 @@ function freq_ts () {
 }
 
 function make_network (location, timestamp) {
+  date2_container.innerHTML = 'Day : ' + timestamp
+  location_container.innerHTML = 'Location : ' + location
   Promise.all([
     d3.csv('data/network_graph.csv'),
     d3.csv('data/id_fullname_cc_loyaltynum.csv')
