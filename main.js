@@ -220,8 +220,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var Tooltip_heatmap = d3
       .selectAll('.heat-container')
-      .style('left', '0px')
-      .style('top', '0px')
+      // .style('left', '0px')
+      // .style('top', '0px')
       .append('div')
       .attr('class', 'tooltip')
       .style('opacity', 0)
@@ -247,8 +247,8 @@ document.addEventListener('DOMContentLoaded', function () {
       })
       .on('mouseout', function (d, i) {
         Tooltip_heatmap.style('opacity', 0)
-          .style('left', '0px')
-          .style('top', '0px')
+          // .style('left', '0px')
+          // .style('top', '0px')
       })
   })
 })
@@ -890,8 +890,8 @@ function draw_barchart () {
   //tooltip
   var Tooltip = d3
     .selectAll('.innovative-container')
-    .style('left', '0px')
-    .style('top', '0px')
+    // .style('left', '0px')
+    // .style('top', '0px')
     .append('div')
     .attr('class', 'tooltip')
     .style('opacity', 0)
@@ -919,7 +919,7 @@ function draw_barchart () {
         .style('top', event.screenY - 75 + 'px')
     })
     .on('mouseout', function (d, i) {
-      Tooltip.style('opacity', 0).style('left', '0px').style('top', '0px')
+      Tooltip.style('opacity', 0)
     })
 
   bar_svg
@@ -935,7 +935,7 @@ function draw_barchart () {
         .style('top', event.screenY - 75 + 'px')
     })
     .on('mouseout', function (d, i) {
-      Tooltip.style('opacity', 0).style('left', '0px').style('top', '0px')
+      Tooltip.style('opacity', 0)
     })
 }
 
