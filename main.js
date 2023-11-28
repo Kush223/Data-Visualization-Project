@@ -11,7 +11,9 @@ let name_ts,
   height_ts
 let date1_container = document.getElementById('barpie-date-container')
 let date2_container = document.getElementById('network-date-container')
-let location_container = document.getElementById('network-location-container')
+let location1_container = document.getElementById('network-location-container')
+let location2_container = document.getElementById('time-location-container')
+let employee_container = document.getElementById('time-employee-container')
 document.addEventListener('DOMContentLoaded', function () {
   Promise.all([d3.csv('data/heatmap_data.csv')]).then(function (values) {
     heatmap_data = values[0]
@@ -957,7 +959,7 @@ function freq_ts () {
 
 function make_network (location, timestamp) {
   date2_container.innerHTML = 'Day : ' + timestamp
-  location_container.innerHTML = 'Location : ' + location
+  location1_container.innerHTML = 'Location : ' + location
   Promise.all([
     d3.csv('data/network_graph.csv'),
     d3.csv('data/id_fullname_cc_loyaltynum.csv')
@@ -1066,6 +1068,8 @@ function make_network (location, timestamp) {
     node.style('cursor', 'pointer').on('click', function (event, d) {
       d3.select('#histogram').selectAll('*').remove()
       d3.select('#time-series-chart').selectAll('*').remove()
+      employee_container.innerHTML = 'Employee : '
+      location2_container.innerHTML = 'Location : '
       make_histogram(d.Name)
       name_ts = d.Name
       timestamp_ts = timestamp
@@ -1293,6 +1297,8 @@ function make_histogram (employee_name) {
 }
 
 function TimeseriesAmount (employee_name, location, targetDate) {
+  employee_container.innerHTML = 'Employee : ' + employee_name
+  location2_container.innerHTML = 'Location : ' + location
   d3.select('#time-series-chart').selectAll('*').remove()
   console.log(targetDate)
   d3.csv('data/timeseries_data.csv').then(function (data) {
@@ -1427,6 +1433,8 @@ function TimeseriesAmount (employee_name, location, targetDate) {
 }
 
 function TimeseriesFrequency (employee_name, location, day) {
+  employee_container.innerHTML = 'Employee : ' + employee_name
+  location2_container.innerHTML = 'Location : ' + location
   d3.select('#time-series-chart').selectAll('*').remove()
   d3.csv('data/timeseries_data.csv').then(function (data) {
     day = new Date(day)
